@@ -1,23 +1,22 @@
-import { useState } from "react";
+import Products from "../components/Products";
+import { loadProducts } from "./api/products";
 
-export default function Home({ name = "Linh", age, children }) {
-  const [products, setProducts] = useState(1);
+// This function runs only on the server side
+export async function getStaticProps() {
+  // Instead of fetching your `/api` route you can call the same
+  // function directly in `getStaticProps`
+  const products = await loadProducts();
+
+  // Props returned will be passed to the page component
+  return { props: { products } };
+}
+
+const Home = ({ products }) => {
   return (
     <div>
-      <div>Name: {name}</div>
-      <div>Age: {age}</div>
-      <div>Home: {children}</div>
-      <h1 className="font-bold text-3xl text-red-500">{products}</h1>
-      <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        onClick={() => {
-          let products = "A";
-          setProducts((prev) => prev + 1);
-          // console.log(products)
-        }}
-      >
-        Click
-      </button>
+      <Products products={products} />
     </div>
   );
-}
+};
+
+export default Home;
